@@ -11,7 +11,7 @@
       (load ".quicklisp-install/quicklisp.lisp"))
     (format t "Installer loaded~%")
     (prog1 
-      (funcall (eval `(function ,(intern "INSTALL" "QUICKLISP-QUICKSTART"))) :path *quicklisp-install-path*)
+      (funcall (eval `(function ,(intern "INSTALL" "QUICKLISP-QUICKSTART"))) :path (format nil "~A/ "*quicklisp-install-path*))
       (format t "Quicklisp installed~%"))))
 
 (use-package :ql-dist)
