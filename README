@@ -1,0 +1,2 @@
+Clone this repository into .quicklisp-install directory and load ".quicklisp-install/maybe-install-quicklisp.lisp"
+Quicklisp will be loaded from ".quicklisp" directory or installed there.

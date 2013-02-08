@@ -1,3 +1,5 @@
+; Script version is 0.1.0
+
 (defvar *quicklisp-install-path* ".quicklisp")
 
 (or 
