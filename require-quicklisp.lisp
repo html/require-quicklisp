@@ -1,8 +1,8 @@
-; Script version is 0.1.1
+; Script version is 0.2.0
 
 (defvar *quicklisp-install-path* ".quicklisp")
 
-(defun require-quicklisp (&key version) 
+(defun require-quicklisp (&key (version :latest)) 
   (or 
     (progn 
       (format t "Trying to load quicklisp~%")
@@ -27,7 +27,13 @@
            (find version (mapcar #'version (enabled-dists)) :test #'string=))) 
 
     (let* ((available-versions (available-versions (dist "quicklisp")))
-           (version-distinfo-url (cdr (assoc version available-versions :test #'string=))))
+           (version-distinfo-url))
+
+      (when (eq version :latest)
+        (setf version (caar available-versions)))
+
+      (setf version-distinfo-url (cdr (assoc version available-versions :test #'string=)))
+
       (unless (available-version-p version)
         (format t "Installing dist version ~A~%" version)
         (install-dist version-distinfo-url :replace t :prompt nil))))) 
