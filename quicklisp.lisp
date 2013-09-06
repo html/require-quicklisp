@@ -968,7 +968,7 @@
                                   (format nil ":~D" port)))
       (add-line "Connection: close")
       ;; FIXME: get this version string from somewhere else.
-      (add-line "User-Agent: quicklisp-bootstrap/2012112500")
+      (add-line "User-Agent: quicklisp-bootstrap/2013082800")
       (add-newline sink)
       (sink-buffer sink))))
 
@@ -1584,6 +1584,15 @@ the indexes in the header accordingly."
 
 (defun install (&key ((:path *home*) *home*)
                 ((:proxy *proxy-url*) *proxy-url*))
+  (when (pathname-name *home*)
+    (let ((name (pathname-name *home*)))
+      (warn "Making ~A part of the install pathname directory"
+            name)
+      ;; This corrects a pathname like "/foo/bar" to "/foo/bar/"
+      (setf *home*
+            (make-pathname :defaults *home*
+                           :directory (append (pathname-directory *home*)
+                                              (list name))))))
   (setf *home* (merge-pathnames *home*))
   (let ((setup-file (qmerge "setup.lisp")))
     (when (probe-file setup-file)

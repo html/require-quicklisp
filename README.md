@@ -9,7 +9,7 @@ You just clone your repository and just run your application.
 It loads existing quicklisp or tries to install if it does not exist. 
 It installs also packages of **specified** quicklisp version. 
 
-And that gives us **some portability guarantee** - on any environment you'll receive packages with versions equal to original.
+And that gives us **some portability guarantee** - on any environment you'll receive packages with versions equal to versions on original environment.
 
 So, you don't have to include .quicklisp directory into repository but you should include this repository (or at least a file from it) 
 and tell what quicklisp dist version you want to use.
