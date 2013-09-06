@@ -1,8 +1,0 @@
-Clone this repository into .quicklisp-install directory copy file .quicklisp-version to your app directory
-and load ".quicklisp-install/require-quicklisp.lisp"
-
-Quicklisp will be loaded from ".quicklisp" directory or installed there.
-
-You can also use require-quicklisp function, 
-in this case don't copy .quicklisp-version, 
-just load  ".quicklisp-install/require-quicklisp.lisp" and evaluate (require-quicklisp :version "2013-01-28")

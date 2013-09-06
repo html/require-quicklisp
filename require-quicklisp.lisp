@@ -1,21 +1,26 @@
-; Script version is 0.2.0
+; Script version is 0.2.1
 
-(defvar *quicklisp-install-path* ".quicklisp")
+(defvar *quicklisp-install-path* (make-pathname :directory '(:relative ".quicklisp")))
 
 (defun require-quicklisp (&key (version :latest)) 
-  (or 
-    (progn 
-      (format t "Trying to load quicklisp~%")
-      (ignore-errors (load (format nil "~A/setup.lisp" *quicklisp-install-path*))))
-    (progn 
-      (format t "It seems like quicklisp is not installed~%")
-      (format t "Trying to install quicklisp~%")
-      (let ((*standard-output* (make-string-output-stream)))
-        (load ".quicklisp-install/quicklisp.lisp"))
-      (format t "Installer loaded~%")
-      (prog1 
-        (funcall (eval `(function ,(intern "INSTALL" "QUICKLISP-QUICKSTART"))) :path (format nil "~A/ "*quicklisp-install-path*))
-        (format t "Quicklisp installed~%")))) 
+  (let ((quicklisp-setup-file 
+          (merge-pathnames 
+            (parse-namestring "setup.lisp")
+            *quicklisp-install-path*)))
+    (or 
+      (progn 
+        (format t "Trying to load quicklisp~%")
+        (when (probe-file quicklisp-setup-file)
+          (load quicklisp-setup-file)))
+      (progn 
+        (format t "It seems like quicklisp is not installed~%")
+        (format t "Trying to install quicklisp~%")
+        (let ((*standard-output* (make-string-output-stream)))
+          (load ".quicklisp-install/quicklisp.lisp"))
+        (format t "Installer loaded~%")
+        (prog1 
+          (funcall (eval `(function ,(intern "INSTALL" "QUICKLISP-QUICKSTART"))) :path *quicklisp-install-path*)
+          (format t "Quicklisp installed~%"))))) 
 
   (setf (fdefinition  'dist) (fdefinition (intern "DIST" "QL-DIST")))
   (setf (fdefinition  'available-versions) (fdefinition (intern "AVAILABLE-VERSIONS" "QL-DIST")))
@@ -36,9 +41,9 @@
 
       (unless (available-version-p version)
         (format t "Installing dist version ~A~%" version)
-        (install-dist version-distinfo-url :replace t :prompt nil))))) 
+        (install-dist version-distinfo-url :replace t :prompt nil)))))
 
-(let ((version-file ".quicklisp-version"))
+(let ((version-file (parse-namestring ".quicklisp-version")))
   (when (probe-file version-file)
     (require-quicklisp 
       :version (with-open-file 
