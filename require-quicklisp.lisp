@@ -1,6 +1,8 @@
-; Script version is 0.2.1
+; Script version is 0.2.2
 
 (defvar *quicklisp-install-path* (make-pathname :directory '(:relative ".quicklisp")))
+
+(declaim #+sbcl(sb-ext:muffle-conditions style-warning))
 
 (defun require-quicklisp (&key (version :latest)) 
   (let ((quicklisp-setup-file 
@@ -42,6 +44,8 @@
       (unless (available-version-p version)
         (format t "Installing dist version ~A~%" version)
         (install-dist version-distinfo-url :replace t :prompt nil)))))
+
+(declaim #+sbcl(sb-ext:unmuffle-conditions style-warning))
 
 (let ((version-file (parse-namestring ".quicklisp-version")))
   (when (probe-file version-file)
