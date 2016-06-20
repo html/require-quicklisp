@@ -30,7 +30,7 @@
   (setf (fdefinition  'version) (fdefinition (intern "VERSION" "QL-DIST")))
   (setf (fdefinition  'install-dist) (fdefinition (intern "INSTALL-DIST" "QL-DIST")))
 
-  (flet ((available-version-p (version)
+  (flet ((enabled-version-p (version)
            (find version (mapcar #'version (enabled-dists)) :test #'string=))) 
 
     (let* ((available-versions (available-versions (dist "quicklisp")))
@@ -41,7 +41,10 @@
 
       (setf version-distinfo-url (cdr (assoc version available-versions :test #'string=)))
 
-      (unless (available-version-p version)
+      (unless (find version available-versions :key #'car :test #'string=)
+        (error "Version ~a is not available. Use one of ~a, see (ql-dist:available-versions (ql-dist:dist \"quicklisp\"))" version (mapcar #'car available-versions)))
+
+      (unless (enabled-version-p version)
         (format t "Installing dist version ~A~%" version)
         (install-dist version-distinfo-url :replace t :prompt nil)))))
 
